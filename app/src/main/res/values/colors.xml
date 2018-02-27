@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1F2D38</color>
+    <color name="colorPrimaryDark">#0A2119</color> <!--Status Bar Color --> #0A2119
+    <color name="colorAccent">#6B8A5E</color>
+    <color name="yellow">#FCCD03</color>
+    <color name="black">#000</color>
+    <color name="white">#FFF</color>
+    <color name="overlayBackgroundMenu">#7f333639</color>
+    <color name="overlayActionBar">#0e0d0e</color>
+    <color name="menu_background_title">#4f0e0d0e</color>
+    <color name="black_tone1">#0e0d0e</color>
+</resources>

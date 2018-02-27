@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Order-It Admin</string>
+    <string name="descriptionApp">Administre el menu de sus clientes, de manera facil y rapida</string>
+    <string name="admin">ADMIN</string>
+    <string name="signIn">Ingresar</string>
+    <string name="signUp">Registrarse</string>
+    <string name="name">Nombre</string>
+    <string name="phone">Numero de Telefono</string>
+    <string name="password">Contrasena</string>
+    <string name="load_message">Un momento, por favor..</string>
+    <string name="login_succesfully">Ingreso exitoso.</string>
+
+    <string name="isNotMemberStaff">Ud. no pertenece al staff del restaurante.</string>
+    <string name="login_failed">Numero de Telefono y/o contrasena erroneos</string>
+    <string name="verify_login_info">"Verificando informacion.."</string>
+    <string name="field_empties"> Complete todos los campos</string>
+    <string name="field_phone_error"> Numero de Telefono tener 10 digitos</string>
+    <string name="field_password_error">Contrasena debe tener mas de 6 digitos</string>
+    <string name="user_not_exist">El usuario ingresado no existe.</string>
+    <string name="title_activity_home">Home</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="adminMenuTitle">Dashboad - Administrador</string>
+
+    <string name="nav_menu">Menu</string>
+    <string name="nav_cart">Cart</string>
+    <string name="nav_orders">Pedidos</string>
+    <string name="nav_log_out">Cerrar Sesion</string>
+
+    <string name="uploadImage">Subir imagen...</string>
+    <string name="createCategory">Crear categoria</string>
+    <string name="createCategoryTitle">Agregar nueva categoria</string>
+    <string name="createCategoryIntent">Seleccione image de categoria</string>
+    <string name="createCategoryLoading">Creando nueva categoria..</string>
+    <string name="createCategorySuccesful">Categoria ha sido creada</string>
+
+    <string name="createCategorySErrorName">Categoria debe contener mas de 5 caracteres.</string>
+</resources>
