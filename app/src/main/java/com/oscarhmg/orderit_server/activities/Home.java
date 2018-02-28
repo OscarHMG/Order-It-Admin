@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,6 +39,7 @@ import com.oscarhmg.orderit_server.Interfaces.ItemClickListener;
 import com.oscarhmg.orderit_server.Model.Category;
 import com.oscarhmg.orderit_server.R;
 import com.oscarhmg.orderit_server.Utils.SessionManager;
+import com.oscarhmg.orderit_server.Utils.Utils;
 import com.oscarhmg.orderit_server.Utils.UtilsDialog;
 import com.oscarhmg.orderit_server.ViewHolder.MenuViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -49,6 +51,8 @@ import info.hoang8f.widget.FButton;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
     private SessionManager session;
     private FirebaseDatabase database;
     private DatabaseReference tableCategory;
@@ -122,7 +126,9 @@ public class Home extends AppCompatActivity
     }
 
 
-
+    /**
+     * Function to load and fill the list of the categories using Firebase connection
+     */
     private void loadCategoryFood() {
         adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(
                 Category.class,
@@ -138,7 +144,7 @@ public class Home extends AppCompatActivity
                 //RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 //itemLayoutView.setLayoutParams(lp);
                 // create ViewHolder
-                MenuViewHolder viewHolder = new MenuViewHolder(itemLayoutView);
+                MenuViewHolder viewHolder = new MenuViewHolder(itemLayoutView, Home.this);
                 return viewHolder;
             }
 
@@ -160,6 +166,16 @@ public class Home extends AppCompatActivity
                         /*Intent foodByCategory = new Intent(Home.this, FoodMenu.class);
                         foodByCategory.putExtra("idCategory", adapter.getRef(position).getKey());
                         startActivity(foodByCategory);*/
+
+
+                    }
+                });
+
+                //Show Context Menu to update/delete category food
+                viewHolder.getBtnOptions().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        view.showContextMenu();
                     }
                 });
 
@@ -171,7 +187,9 @@ public class Home extends AppCompatActivity
         recyclerMenu.setAdapter(adapter);
     }
 
-
+    /**
+     * Function to show a dialog when user wants to create a new food category
+     */
     private void showCreateCategoryDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
         alertDialog.setTitle(getString(R.string.createCategoryTitle));
@@ -197,6 +215,10 @@ public class Home extends AppCompatActivity
 
     }
 
+    /**
+     * Set Listeners of the buttons in the dialog
+     * @param alertDialog
+     */
     private void setButtonListenerActions(final AlertDialog alertDialog) {
         newCategoryName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -214,7 +236,7 @@ public class Home extends AppCompatActivity
                 if(s.length() > 5){
                     btnSelectCategoryImage.setEnabled(true);
                 }else{
-                    Toast.makeText(Home.this, getString(R.string.createCategorySErrorName), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Home.this, getString(R.string.createCategorySErrorName), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -230,13 +252,26 @@ public class Home extends AppCompatActivity
         btnUploadCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                if(actionType == Utils.ACTION_CREATE)
+                */
                 uploadNewImageCategory();
+
+                /*
+                else if (actionType == Utils.ACTION_MODIFY)
+                */
+                /*
+                    modifyImageCategory();
+                */
+                alertDialog.dismiss();
             }
         });
     }
 
 
-
+    /**
+     * Function to choose a image from the gallery of the phone to create the new food category
+     */
     private void chooseImageFromPhone() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -244,6 +279,9 @@ public class Home extends AppCompatActivity
         startActivityForResult(Intent.createChooser(intent,getString(R.string.createCategoryIntent)), PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Function to upload new image of new category
+     */
     private void uploadNewImageCategory() {
         if(saveURI != null){
             progressDialogNewCategory = new ProgressDialog(this);
@@ -285,6 +323,110 @@ public class Home extends AppCompatActivity
     }
 
 
+    /**
+     * Show dialog to modify a existing category and save it in firebase
+     * @param key key of the category
+     * @param item item to update
+     */
+    private void showDialogToUpdateCategory(final String key, final Category item) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+        alertDialog.setTitle(getString(R.string.modifyCategoryTitle));
+        alertDialog.setMessage("");
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View layoutNewCategory = inflater.inflate(R.layout.dialog_upload_category_layout, null);
+
+        newCategoryName = (MaterialEditText) layoutNewCategory.findViewById(R.id.newCategoryName);
+        btnSelectCategoryImage = (FButton) layoutNewCategory.findViewById(R.id.btnUploadPicture);
+        btnUploadCategory = (FButton) layoutNewCategory.findViewById(R.id.btnCreateCategory);
+        btnUploadCategory.setText(R.string.updateLabel);
+        //btnUploadCategory.setEnabled(false);
+        //btnSelectCategoryImage.setEnabled(false);
+        //Actions of Buttons
+        newCategoryName.setText(item.getName());
+
+
+        alertDialog.setView(layoutNewCategory);
+        alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
+
+        final AlertDialog dialog = alertDialog.show();
+        //setButtonListenerActions(dialog);
+        //alertDialog.show();
+
+
+
+        btnSelectCategoryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImageFromPhone();
+                //alertDialog.dismiss();
+            }
+        });
+
+        btnUploadCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //First, change the item name, after the image
+
+                modifyImageCategory(item, key);
+
+
+                dialog.dismiss();
+            }
+        });
+    }
+    /**
+     * Function to modify image of category
+     * @param item
+     */
+    private void modifyImageCategory(final Category item, final String key) {
+        if(saveURI != null){
+            progressDialogNewCategory = new ProgressDialog(this);
+            UtilsDialog.createAndShowDialogProgress(progressDialogNewCategory, getString(R.string.createCategoryLoading));
+
+            String imageName = UUID.randomUUID().toString();
+            final StorageReference imageFolder = storageReference.child("images/"+imageName);
+            imageFolder.putFile(saveURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialogNewCategory.dismiss();
+                    Toast.makeText(Home.this, getString(R.string.createCategorySuccesful), Toast.LENGTH_SHORT).show();
+                    imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            //Everything is correct, update
+                            item.setName(newCategoryName.getText().toString());
+                            item.setImage(uri.toString());
+                            tableCategory.child(key).setValue(item);
+
+
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialogNewCategory.dismiss();
+                    Toast.makeText(Home.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * (taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount()));
+                    progressDialogNewCategory.setMessage("Creando "+progress+"%");
+                }
+            });
+        }
+    }
+
+
+    /**
+     * Function to delete category
+     * @param key Category key to be deleted
+     */
+    private void deleteCategory(String key) {
+        tableCategory.child(key).removeValue();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -345,4 +487,25 @@ public class Home extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    /**
+     * Action when user press option of context menu
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(item.getTitle().equals(getString(R.string.updateLabel))){
+            showDialogToUpdateCategory(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
+        }else if(item.getTitle().equals(getString(R.string.deleteLabel))){
+            deleteCategory(adapter.getRef(item.getOrder()).getKey());
+        }
+
+
+        return super.onContextItemSelected(item);
+
+    }
+
+
+
 }

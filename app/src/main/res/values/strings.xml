@@ -39,4 +39,9 @@
     <string name="createCategorySuccesful">Categoria ha sido creada</string>
 
     <string name="createCategorySErrorName">Categoria debe contener mas de 5 caracteres.</string>
+    <string name="updateLabel">Actualizar/Modificar categoria</string>
+    <string name="deleteLabel">Eliminar categoria</string>
+    <string name="titleContextMenu">Accion a realizar</string>
+    <string name="modifyCategoryTitle">Modificar categoria</string>
+
 </resources>
