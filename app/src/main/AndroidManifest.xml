@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.oscarhmg.orderit_server">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +24,10 @@
         <activity
             android:name=".activities.Home"
             android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.FoodActivity"
+            android:label="@string/title_activity_food"
             android:theme="@style/AppTheme"></activity>
     </application>
 

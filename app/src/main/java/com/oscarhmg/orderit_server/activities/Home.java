@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -39,7 +38,6 @@ import com.oscarhmg.orderit_server.Interfaces.ItemClickListener;
 import com.oscarhmg.orderit_server.Model.Category;
 import com.oscarhmg.orderit_server.R;
 import com.oscarhmg.orderit_server.Utils.SessionManager;
-import com.oscarhmg.orderit_server.Utils.Utils;
 import com.oscarhmg.orderit_server.Utils.UtilsDialog;
 import com.oscarhmg.orderit_server.ViewHolder.MenuViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -156,18 +154,14 @@ public class Home extends AppCompatActivity
                 //Now download image.
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.getImageCategory());
 
-                //final Category item = model;
-                //Implement own listener
-
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLonglick) {
 
-                        /*Intent foodByCategory = new Intent(Home.this, FoodMenu.class);
-                        foodByCategory.putExtra("idCategory", adapter.getRef(position).getKey());
-                        startActivity(foodByCategory);*/
-
-
+                        //Click, go to FoodActivity list activity.
+                        Intent foodByCategory = new Intent(Home.this, FoodActivity.class);
+                        foodByCategory.putExtra("CategoryId", adapter.getRef(position).getKey());
+                        startActivity(foodByCategory);
                     }
                 });
 

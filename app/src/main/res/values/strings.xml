@@ -43,5 +43,6 @@
     <string name="deleteLabel">Eliminar categoria</string>
     <string name="titleContextMenu">Accion a realizar</string>
     <string name="modifyCategoryTitle">Modificar categoria</string>
+    <string name="title_activity_food">Food</string>
 
 </resources>
